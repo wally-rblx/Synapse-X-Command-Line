@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +66,7 @@ namespace SynapseCommandLine
             Scripts = SynScripts;
         }
 
-        private static void Attacher(SxLibBase.SynAttachEvents Event)
+        private static void Attacher(SxLibBase.SynAttachEvents Event, object bla)
         {
             switch (Event)
             {
@@ -130,7 +130,7 @@ namespace SynapseCommandLine
             }
         }
 
-        private static void Loader(SxLibBase.SynLoadEvents Event)
+        private static void Loader(SxLibBase.SynLoadEvents Event, object yuck)
         {
             switch (Event)
             {
@@ -217,15 +217,24 @@ namespace SynapseCommandLine
             }
         }
 
+        public static string GetScriptHubNames()
+        {
+            string list = "";
+            foreach (var Script in Scripts)
+            {
+                list += Script.Name + "\n";
+            }
+
+            return list;
+        }
+
         public static void ExecuteScriptHub(string name)
         {
-            string realName = GetScriptHubName(name);
-
             foreach(var Script in Scripts)
             {
-                if (Script.Name == realName)
+                if (Script.Name == name)
                 {
-                    Console.WriteLine("[S^X] Successfully executed " + realName + "!");
+                    Console.WriteLine("[S^X] Successfully executed " + name + "!");
                     Script.Execute();
                     return;
                 }
@@ -249,18 +258,13 @@ execute <code> - executes a script. example: execute print'hi'
 shub <name> - executes a script hub script. example: shub esp (would execute Unnamed ESP)
 script <file> - executes a script from your scripts folder. example: script memes.lua
 attach - attaches Synapse X to Roblox if it is not already attached.
-
-full script hub list: 
-jbhaxx - Jailbreak Haxx
-madcity - Madcity Haxx
-dex - Dark Dex
-remotespy - Remote Spy
-scriptdump - Script Dumper
-esp - Unnamed ESP
-pfhaxx - PFHaxx
-streamsnipe - Stream Sniper
+scrlist - gives u all the script hub names
 ";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             Console.Title = "Synapse X Command Line - Created by wally";
@@ -284,7 +288,7 @@ streamsnipe - Stream Sniper
             {
                 string input = Console.ReadLine();
                 if (SynapseLibrary.attached == true)
-                {
+                {                    
                     if (input.Length >= 7 && input.Substring(0, 7) == "execute")
                     {
                         SynapseLibrary.Synapse.Execute(input.Substring(8));
@@ -302,6 +306,9 @@ streamsnipe - Stream Sniper
                     } else if (input.Substring(0, 4) == "help")
                     {
                         Console.WriteLine(helpText);
+                    } else if (input.Substring(0, 7) == "scrlist")
+                    {
+                        Console.Write(SynapseLibrary.GetScriptHubNames());
                     }
                 } else
                 {
